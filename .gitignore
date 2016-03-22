@@ -1,0 +1,12 @@
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+03-genersequencealign/bin
+03-genersequencealign/obj
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
