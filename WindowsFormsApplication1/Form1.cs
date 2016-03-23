@@ -6,19 +6,24 @@ namespace TSP
 {
     public partial class mainform : Form
     {
-        private ProblemAndSolver CityData;
+        private Problem CityData;
 
-        // Switch case strings for TSP run modes
-        private int DEFAULT = 0;
-        private int BRANCH_AND_BOUND = 1;
-        private int GREEDY = 2;
-        private int FANCY = 3;
+        // Used to define the different kind of ways that the TSP can be solved
+        // DEFAULT is used to indicate that the given problem should be solved
+        // using the default implementation (DefaultSolver.cs).
+        // BRANCH_AND_BOUND is used to indicate that the given problem should be solved
+        // using the branch and bound method that you write (BranchAndBoundSolver.cs).
+        // GREEDY --> The greedy method you will have to write for the group project (GreedySolver.cs)
+        // FANCY --> Your own implementation that you will have to write for the 
+        // group project (FancySolver.cs).
+        // If you are wondering where these are used, see the handleToolStripMenuClick method
+        private enum RunType { DEFAULT, BRANCH_AND_BOUND, GREEDY, FANCY }
 
         public mainform()
         {
             InitializeComponent();
 
-            CityData = new ProblemAndSolver();
+            CityData = new Problem();
             this.tbSeed.Text = CityData.Seed.ToString();
         }
 
@@ -26,45 +31,84 @@ namespace TSP
          * GUI methods & event handlers
          */
 
-        private void AlgorithmMenu2_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            AlgorithmMenu2.Text = e.ClickedItem.Text;
-            AlgorithmMenu2.Tag = e.ClickedItem;
-        }
-
-        private void AlgorithmMenu2_ButtonClick_1(object sender, EventArgs e)
-        {
-            if (AlgorithmMenu2.Tag != null)
-            {
-                (AlgorithmMenu2.Tag as ToolStripMenuItem).PerformClick();
-            }
-            else
-            {
-                AlgorithmMenu2.ShowDropDown();
-            }
-        }
-
-        private void cboMode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            this.reset();
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             this.reset();
-        }
-
-        // overloaded to call the redraw method for CityData. 
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-            e.Graphics.SetClip(new Rectangle(0, 0, this.Width, this.Height - this.toolStrip1.Height - 35));
-            CityData.Draw(e.Graphics);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
         {
             this.Invalidate();
         }
+
+        // overloaded to call the redraw method for CityData. 
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.SetClip(new Rectangle(0, 0, this.Width, this.Height - this.toolStrip1.Height - 35));
+            DrawCities(e.Graphics);
+        }
+
+        // draw the cities in the problem.  if the bssf member is defined, then
+        // draw that too. 
+        // <param name="g">where to draw the stuff</param>
+        private void DrawCities(Graphics g)
+        {
+            // Take care of the brushes
+            Brush cityBrushStyle = new SolidBrush(Color.Black);
+            Brush cityBrushStartStyle = new SolidBrush(Color.Red);
+            Pen routePenStyle = new Pen(Color.Blue, 1);
+            routePenStyle.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+
+            int CITY_ICON_SIZE = 5;
+            float width = g.VisibleClipBounds.Width - 45F;
+            float height = g.VisibleClipBounds.Height - 45F;
+            Font labelFont = new Font("Arial", 10);
+
+            // Draw lines
+            if (CityData.BSSF != null)
+            {
+                // make a list of points. 
+                Point[] ps = new Point[CityData.BSSF.Route.Count];
+                int index = 0;
+                foreach (City c in CityData.BSSF.Route)
+                {
+                    if (index < CityData.BSSF.Route.Count - 1)
+                        g.DrawString(" " + index + "(" + c.costToGetTo(CityData.BSSF.Route[index + 1] as City) + ")",
+                            labelFont,
+                            cityBrushStartStyle,
+                            new PointF((float)c.X * width + 3F,
+                            (float)c.Y * height));
+                    else
+                        g.DrawString(" " + index + "(" + c.costToGetTo(CityData.BSSF.Route[0] as City) + ")",
+                            labelFont,
+                            cityBrushStartStyle,
+                            new PointF((float)c.X * width + 3F,
+                            (float)c.Y * height));
+                    ps[index++] = new Point((int)(c.X * width) + CITY_ICON_SIZE / 2,
+                        (int)(c.Y * height) + CITY_ICON_SIZE / 2);
+                }
+
+                if (ps.Length > 0)
+                {
+                    g.DrawLines(routePenStyle, ps);
+                    g.FillEllipse(cityBrushStartStyle, (float)CityData.Cities[0].X * width - 1,
+                        (float)CityData.Cities[0].Y * height - 1, CITY_ICON_SIZE + 2, CITY_ICON_SIZE + 2);
+                }
+
+                // draw the last line. 
+                g.DrawLine(routePenStyle, ps[0], ps[ps.Length - 1]);
+            }
+
+            // Draw city dots
+            foreach (City c in CityData.Cities)
+            {
+                g.FillEllipse(cityBrushStyle, (float)c.X * width, (float)c.Y * height, CITY_ICON_SIZE, CITY_ICON_SIZE);
+            }
+        }
+
+        /*
+         * Button click handlers
+         */
 
         private void generate_Click(object sender, EventArgs e)
         {
@@ -78,14 +122,9 @@ namespace TSP
             this.reset(seed, getProblemSize(), getTimeLimit());
         }
 
-        // Please note that clicking the New Problem button and
-        // the Random Problem button do the same thing
         private void resetToDefaults_Click(object sender, EventArgs e)
         {
-            reset(ProblemAndSolver.DEFAULT_SEED,
-                  ProblemAndSolver.DEFAULT_PROBLEM_SIZE,
-                  ProblemAndSolver.DEFAULT_TIME_LIMIT
-                  );
+            this.reset(Problem.DEFAULT_SEED, Problem.DEFAULT_PROBLEM_SIZE, Problem.DEFAULT_TIME_LIMIT);
         }
 
         private void tbProblemSize_KeyDown(object sender, KeyEventArgs e)
@@ -121,36 +160,59 @@ namespace TSP
             this.reset();
         }
 
+        private void AlgorithmMenu2_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            AlgorithmMenu2.Text = e.ClickedItem.Text;
+            AlgorithmMenu2.Tag = e.ClickedItem;
+        }
+
+        private void AlgorithmMenu2_ButtonClick_1(object sender, EventArgs e)
+        {
+            if (AlgorithmMenu2.Tag != null)
+            {
+                (AlgorithmMenu2.Tag as ToolStripMenuItem).PerformClick();
+            }
+            else
+            {
+                AlgorithmMenu2.ShowDropDown();
+            }
+        }
+
+        private void cboMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.reset();
+        }
+
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
         }
 
         /*
-         * GUI - Button clicks to run TSP in various modes
+         * TSP mode selection click - allows TSP to run in various modes
          */
 
         private void defaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            handleToolStripMenuClick(DEFAULT);
+            handleToolStripMenuClick(RunType.DEFAULT);
         }
 
         private void bBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            handleToolStripMenuClick(BRANCH_AND_BOUND);
+            handleToolStripMenuClick(RunType.BRANCH_AND_BOUND);
         }
 
         private void greedyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            handleToolStripMenuClick(GREEDY);
+            handleToolStripMenuClick(RunType.GREEDY);
         }
 
         private void myTSPToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            handleToolStripMenuClick(FANCY);
+            handleToolStripMenuClick(RunType.FANCY);
         }
 
-        private void handleToolStripMenuClick(int originCode)
+        private void handleToolStripMenuClick(RunType runType)
         {
             string[] results;
             this.reset();
@@ -159,28 +221,31 @@ namespace TSP
             tbCostOfTour.Text = " Running...";
             Refresh();
 
-            if (originCode == BRANCH_AND_BOUND)
+            Solver solver;
+            if (runType == RunType.BRANCH_AND_BOUND)
             {
-                results = CityData.solveBranchAndBound();
+                solver = new BranchAndBoundSolver(CityData);
+                results = solver.solve();
             }
-            else if (originCode == GREEDY)
+            else if (runType == RunType.GREEDY)
             {
-                results = CityData.solveGreedy();
+                solver = new GreedySolver(CityData);
+                results = solver.solve();
             }
-            else if (originCode == FANCY)
+            else if (runType == RunType.FANCY)
             {
-                results = CityData.solveFancy();
+                solver = new FancySolver(CityData);
+                results = solver.solve();
             }
-            else  // originCode == DEFAULT
+            else  // runType == RunType.DEFAULT
             {
-                results = CityData.solveDefault();
+                solver = new DefaultSolver(CityData);
+                results = solver.solve();
             }
 
-            results = CityData.solveDefault();
-
-            tbCostOfTour.Text = results[ProblemAndSolver.COST];
-            tbElapsedTime.Text = results[ProblemAndSolver.TIME];
-            tbNumSolutions.Text = results[ProblemAndSolver.COUNT];
+            tbCostOfTour.Text = results[Problem.COST_POSITION];
+            tbElapsedTime.Text = results[Problem.TIME_POSITION];
+            tbNumSolutions.Text = results[Problem.COUNT_POSITION];
             Invalidate();                          // force a refresh.
         }
 
@@ -199,7 +264,7 @@ namespace TSP
         {
             int seed;
             return int.TryParse(this.tbSeed.Text, out seed) ? int.Parse(this.tbSeed.Text)
-                : ProblemAndSolver.DEFAULT_SEED;
+                : Problem.DEFAULT_SEED;
         }
 
         // If the tbProblemSize box doesn't contain a valid integer,
@@ -208,7 +273,7 @@ namespace TSP
         {
             int size;
             return int.TryParse(this.tbProblemSize.Text, out size) ? int.Parse(this.tbProblemSize.Text) 
-                : ProblemAndSolver.DEFAULT_PROBLEM_SIZE;
+                : Problem.DEFAULT_PROBLEM_SIZE;
         }        
 
         // If the tbTimeLimit box doesn't contain a valid integer,
@@ -217,7 +282,7 @@ namespace TSP
         {
             int timeLimit;
             return int.TryParse(this.tbTimeLimit.Text, out timeLimit) ? int.Parse(this.tbTimeLimit.Text) 
-                : ProblemAndSolver.DEFAULT_TIME_LIMIT;
+                : Problem.DEFAULT_TIME_LIMIT;
         }
 
         // Calls the reset(int, int, int) function using the current state values
@@ -230,7 +295,7 @@ namespace TSP
             this.toolStrip1.Focus();  // Not sure why this is here; leftover from previous code
             HardMode.Modes mode = getMode();
 
-            CityData = new ProblemAndSolver(seed, problemSize, timeLimit, mode);
+            CityData = new Problem(seed, problemSize, timeLimit, mode);
             //CityData.GenerateProblem(problemSize, mode, timeLimit);
 
             tbSeed.Text = seed.ToString();

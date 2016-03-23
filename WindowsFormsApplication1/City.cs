@@ -9,7 +9,7 @@ namespace TSP
         private const double SCALE_FACTOR = 1000;
         // This makes distances asymmetric
         // 0 <= Max elevation <= 1
-        public const double MAX_ELEVATION = 0.10;
+        public const double MAX_ELEVATION = 0.10;  
 
         private double _X;
         private double _Y;
