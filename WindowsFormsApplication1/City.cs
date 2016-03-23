@@ -1,14 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 
 namespace TSP
 {
-
-    /// <summary>
-    /// Represents a city, which is a node in the Traveling Salesman Problem
-    /// </summary>
+    // Represents a city, which is a node in the Traveling Salesman Problem
     class City
     {
 
@@ -44,13 +38,9 @@ namespace TSP
             set { _Y = value; }
         }
 
-
-        /// <summary>
-        /// How much does it cost to get from this city to the destination?
-        /// Note that this is an asymmetric cost function.
-        /// 
-        /// In advanced mode, it returns infinity when there is no connection.
-        /// </summary>
+        // How much does it cost to get from this city to the destination?
+        // Note that this is an asymmetric cost function.
+        // In advanced mode, it returns infinity when there is no connection.
         public double costToGetTo (City destination) 
         {
             // Cartesian distance

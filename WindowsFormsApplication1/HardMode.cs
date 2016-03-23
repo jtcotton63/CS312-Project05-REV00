@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-
-// TODO: rename this as EdgeRemover
 
 namespace TSP
 {
-    /// <summary>
-    /// This class is used in "hard" mode, where edges are selectively removed. - APS
-    /// </summary>
+    // This class is used in "hard" mode, where edges are selectively removed. - APS
     class HardMode
     {
         // List of edges that are removed
@@ -111,14 +106,10 @@ namespace TSP
             return referenceSet;
         }
 
-        /// <summary>
-        /// Difficulty Modes:
-        /// <ul>
-        /// <li>Easy:   Distances are symmetric (for debugging)</li>
-        /// <li>Normal: Distances are asymmetric</li>
-        /// <li>Hard:   Asymmetric distances; some paths are blocked</li>
-        /// </ul>
-        /// </summary>
+        // Difficulty Modes:
+        // Easy:   Distances are symmetric (for debugging)
+        // Normal: Distances are asymmetric
+        // Hard:   Asymmetric distances; some paths are blocked
         public enum Modes { Easy = 0, Normal, Hard };
         private const Modes DEFAULT_MODE = Modes.Normal;
 
