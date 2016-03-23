@@ -52,12 +52,14 @@ namespace TSP
             this.bBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.newProblem = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.tbSeed = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbGenerate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.randomProblem = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.resetToDefaults = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
             this.tbNumSolutions = new System.Windows.Forms.ToolStripTextBox();
@@ -93,7 +95,7 @@ namespace TSP
             // toolStripLabel8
             // 
             this.toolStripLabel8.Name = "toolStripLabel8";
-            this.toolStripLabel8.Size = new System.Drawing.Size(64, 22);
+            this.toolStripLabel8.Size = new System.Drawing.Size(53, 22);
             this.toolStripLabel8.Text = "Time Limit";
             // 
             // tbTimeLimit
@@ -113,7 +115,7 @@ namespace TSP
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(75, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(67, 22);
             this.toolStripLabel2.Text = "Problem Size";
             // 
             // tbProblemSize
@@ -133,7 +135,7 @@ namespace TSP
             // toolStripLabel6
             // 
             this.toolStripLabel6.Name = "toolStripLabel6";
-            this.toolStripLabel6.Size = new System.Drawing.Size(55, 22);
+            this.toolStripLabel6.Size = new System.Drawing.Size(49, 22);
             this.toolStripLabel6.Text = "Difficulty";
             // 
             // cboMode
@@ -155,7 +157,7 @@ namespace TSP
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(70, 22);
+            this.toolStripLabel3.Size = new System.Drawing.Size(65, 22);
             this.toolStripLabel3.Text = "Cost of tour";
             // 
             // tbCostOfTour
@@ -174,7 +176,7 @@ namespace TSP
             // toolStripLabel4
             // 
             this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(58, 22);
+            this.toolStripLabel4.Size = new System.Drawing.Size(53, 22);
             this.toolStripLabel4.Text = "Solved in ";
             // 
             // tbElapsedTime
@@ -192,12 +194,14 @@ namespace TSP
             this.toolStripLabel7,
             this.AlgorithmMenu2,
             this.toolStripSeparator1,
-            this.newProblem,
-            this.toolStripSeparator2,
             this.toolStripLabel1,
             this.tbSeed,
             this.toolStripSeparator3,
+            this.tbGenerate,
+            this.toolStripSeparator2,
             this.randomProblem,
+            this.toolStripSeparator8,
+            this.resetToDefaults,
             this.toolStripSeparator7,
             this.toolStripLabel5,
             this.tbNumSolutions});
@@ -210,7 +214,7 @@ namespace TSP
             // toolStripLabel7
             // 
             this.toolStripLabel7.Name = "toolStripLabel7";
-            this.toolStripLabel7.Size = new System.Drawing.Size(61, 22);
+            this.toolStripLabel7.Size = new System.Drawing.Size(52, 22);
             this.toolStripLabel7.Text = "Algorithm";
             // 
             // AlgorithmMenu2
@@ -224,7 +228,7 @@ namespace TSP
             this.AlgorithmMenu2.Image = ((System.Drawing.Image)(resources.GetObject("AlgorithmMenu2.Image")));
             this.AlgorithmMenu2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.AlgorithmMenu2.Name = "AlgorithmMenu2";
-            this.AlgorithmMenu2.Size = new System.Drawing.Size(61, 22);
+            this.AlgorithmMenu2.Size = new System.Drawing.Size(58, 22);
             this.AlgorithmMenu2.Tag = this.defaultToolStripMenuItem;
             this.AlgorithmMenu2.Text = "Default";
             this.AlgorithmMenu2.ButtonClick += new System.EventHandler(this.AlgorithmMenu2_ButtonClick_1);
@@ -233,28 +237,28 @@ namespace TSP
             // myTSPToolStripMenuItem
             // 
             this.myTSPToolStripMenuItem.Name = "myTSPToolStripMenuItem";
-            this.myTSPToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.myTSPToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.myTSPToolStripMenuItem.Text = "My TSP";
             this.myTSPToolStripMenuItem.Click += new System.EventHandler(this.myTSPToolStripMenuItem_Click);
             // 
             // greedyToolStripMenuItem
             // 
             this.greedyToolStripMenuItem.Name = "greedyToolStripMenuItem";
-            this.greedyToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.greedyToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.greedyToolStripMenuItem.Text = "Greedy";
             this.greedyToolStripMenuItem.Click += new System.EventHandler(this.greedyToolStripMenuItem_Click);
             // 
             // bBToolStripMenuItem
             // 
             this.bBToolStripMenuItem.Name = "bBToolStripMenuItem";
-            this.bBToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.bBToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.bBToolStripMenuItem.Text = "B and B";
             this.bBToolStripMenuItem.Click += new System.EventHandler(this.bBToolStripMenuItem_Click);
             // 
             // defaultToolStripMenuItem
             // 
             this.defaultToolStripMenuItem.Name = "defaultToolStripMenuItem";
-            this.defaultToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.defaultToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.defaultToolStripMenuItem.Text = "Default";
             this.defaultToolStripMenuItem.Click += new System.EventHandler(this.defaultToolStripMenuItem_Click);
             // 
@@ -263,25 +267,10 @@ namespace TSP
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // newProblem
-            // 
-            this.newProblem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.newProblem.Image = ((System.Drawing.Image)(resources.GetObject("newProblem.Image")));
-            this.newProblem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.newProblem.Name = "newProblem";
-            this.newProblem.Size = new System.Drawing.Size(83, 22);
-            this.newProblem.Text = "New Problem";
-            this.newProblem.Click += new System.EventHandler(this.newProblem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(32, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(31, 22);
             this.toolStripLabel1.Text = "Seed";
             // 
             // tbSeed
@@ -289,11 +278,27 @@ namespace TSP
             this.tbSeed.Name = "tbSeed";
             this.tbSeed.Size = new System.Drawing.Size(100, 25);
             this.tbSeed.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbSeed.Leave += new System.EventHandler(this.tbSeed_Leave);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tbGenerate
+            // 
+            this.tbGenerate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tbGenerate.Image = ((System.Drawing.Image)(resources.GetObject("tbGenerate.Image")));
+            this.tbGenerate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbGenerate.Name = "tbGenerate";
+            this.tbGenerate.Size = new System.Drawing.Size(56, 22);
+            this.tbGenerate.Text = "Generate";
+            this.tbGenerate.Click += new System.EventHandler(this.generate_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // randomProblem
             // 
@@ -301,9 +306,24 @@ namespace TSP
             this.randomProblem.Image = ((System.Drawing.Image)(resources.GetObject("randomProblem.Image")));
             this.randomProblem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.randomProblem.Name = "randomProblem";
-            this.randomProblem.Size = new System.Drawing.Size(104, 22);
+            this.randomProblem.Size = new System.Drawing.Size(91, 22);
             this.randomProblem.Text = "Random Problem";
             this.randomProblem.Click += new System.EventHandler(this.randomProblem_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(6, 25);
+            // 
+            // resetToDefaults
+            // 
+            this.resetToDefaults.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.resetToDefaults.Image = ((System.Drawing.Image)(resources.GetObject("resetToDefaults.Image")));
+            this.resetToDefaults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.resetToDefaults.Name = "resetToDefaults";
+            this.resetToDefaults.Size = new System.Drawing.Size(95, 22);
+            this.resetToDefaults.Text = "Reset to Defaults";
+            this.resetToDefaults.Click += new System.EventHandler(this.resetToDefaults_Click);
             // 
             // toolStripSeparator7
             // 
@@ -313,7 +333,7 @@ namespace TSP
             // toolStripLabel5
             // 
             this.toolStripLabel5.Name = "toolStripLabel5";
-            this.toolStripLabel5.Size = new System.Drawing.Size(66, 22);
+            this.toolStripLabel5.Size = new System.Drawing.Size(61, 22);
             this.toolStripLabel5.Text = "# Solutions";
             // 
             // tbNumSolutions
@@ -360,19 +380,16 @@ namespace TSP
         private System.Windows.Forms.ToolStripLabel toolStripLabel6;
         private System.Windows.Forms.ToolStripComboBox cboMode;
         private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripButton newProblem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripTextBox tbSeed;
         private System.Windows.Forms.ToolStripButton randomProblem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel7;
         private System.Windows.Forms.ToolStripSplitButton AlgorithmMenu2;
         private System.Windows.Forms.ToolStripMenuItem myTSPToolStripMenuItem;
-//        private System.Windows.Forms.ToolStripMenuItem randomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bBToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem greedyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripLabel toolStripLabel5;
@@ -380,9 +397,10 @@ namespace TSP
         private System.Windows.Forms.ToolStripLabel toolStripLabel8;
         private System.Windows.Forms.ToolStripTextBox tbTimeLimit;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-
-
-
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripButton resetToDefaults;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton tbGenerate;
     }
 }
 

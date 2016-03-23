@@ -5,6 +5,17 @@ namespace TSP
     // Represents a city, which is a node in the Traveling Salesman Problem
     class City
     {
+        // Constants
+        private const double SCALE_FACTOR = 1000;
+        // This makes distances asymmetric
+        // 0 <= Max elevation <= 1
+        public const double MAX_ELEVATION = 0.10;
+
+        private double _X;
+        private double _Y;
+        private double _elevation;
+        // The mode manager applies to all the cities
+        private static HardMode modeManager;
 
         public City(double x, double y)
         {
@@ -20,12 +31,6 @@ namespace TSP
             _elevation = elevation;
         }
 
-        private double _X;
-        private double _Y;
-        private double _elevation;
-        private const double SCALE_FACTOR = 1000;
-
-        // These are C# property accessors
         public double X
         {
             get { return _X; }
@@ -59,13 +64,6 @@ namespace TSP
             return Math.Round(magnitude);
         }
 
-
-        // This is makes distances asymmetric
-        // 0 <= Maximum elevation <= 1
-        public const double MAX_ELEVATION = 0.10;
-
-        // The mode manager applies to all the cities...
-        private static HardMode modeManager;
         public static void setModeManager(HardMode modeManager)
         {
             City.modeManager = modeManager;

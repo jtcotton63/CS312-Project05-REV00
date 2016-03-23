@@ -1,18 +1,12 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 
 namespace TSP
 {
     public partial class mainform : Form
     {
         private ProblemAndSolver CityData;
-
-        // Default setting
-        private int DEFAULT_PROBLEM_SIZE = 20;
-        private int DEFAULT_SEED = 1;
-        private int DEFAULT_TIME_LIMIT = 60;
 
         // Switch case strings for TSP run modes
         private int DEFAULT = 0;
@@ -57,7 +51,6 @@ namespace TSP
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // use the parameters in the GUI controls
             this.reset();
         }
 
@@ -73,16 +66,26 @@ namespace TSP
             this.Invalidate();
         }
 
-        // Please note that clicking the New Problem button and
-        // the Random Problem button do the same thing
-        private void newProblem_Click(object sender, EventArgs e)
+        private void generate_Click(object sender, EventArgs e)
         {
-            resetToRandomProblem();
+            this.reset();
         }
 
         private void randomProblem_Click(object sender, EventArgs e)
         {
-            resetToRandomProblem();
+            Random random = new Random();
+            int seed = random.Next(1000); // 3-digit random number
+            this.reset(seed, getProblemSize(), getTimeLimit());
+        }
+
+        // Please note that clicking the New Problem button and
+        // the Random Problem button do the same thing
+        private void resetToDefaults_Click(object sender, EventArgs e)
+        {
+            reset(ProblemAndSolver.DEFAULT_SEED,
+                  ProblemAndSolver.DEFAULT_PROBLEM_SIZE,
+                  ProblemAndSolver.DEFAULT_TIME_LIMIT
+                  );
         }
 
         private void tbProblemSize_KeyDown(object sender, KeyEventArgs e)
@@ -100,6 +103,11 @@ namespace TSP
         {
             if (e.KeyCode == Keys.Enter)
                 this.reset();
+        }
+
+        private void tbSeed_Leave(object sender, EventArgs e)
+        {
+            this.reset();
         }
 
         private void tbTimeLimit_KeyDown(object sender, KeyEventArgs e)
@@ -185,38 +193,45 @@ namespace TSP
             return HardMode.getMode(cboMode.Text);
         }
 
-        private int getProblemSize()
-        {
-            int size;
-            return int.TryParse(this.tbProblemSize.Text, out size) ? int.Parse(this.tbProblemSize.Text) : DEFAULT_PROBLEM_SIZE;
-        }
-
+        // If the tbSeed box doesn't contain a valid integer,
+        // returns the default value
         private int getSeed()
         {
             int seed;
-            return int.TryParse(this.tbSeed.Text, out seed) ? int.Parse(this.tbSeed.Text) : DEFAULT_SEED;
+            return int.TryParse(this.tbSeed.Text, out seed) ? int.Parse(this.tbSeed.Text)
+                : ProblemAndSolver.DEFAULT_SEED;
         }
 
+        // If the tbProblemSize box doesn't contain a valid integer,
+        // returns the default value
+        private int getProblemSize()
+        {
+            int size;
+            return int.TryParse(this.tbProblemSize.Text, out size) ? int.Parse(this.tbProblemSize.Text) 
+                : ProblemAndSolver.DEFAULT_PROBLEM_SIZE;
+        }        
+
         // If the tbTimeLimit box doesn't contain a valid integer,
-        // sets the time limit to the default value
+        // returns the default value
         private int getTimeLimit()
         {
             int timeLimit;
-            return int.TryParse(this.tbTimeLimit.Text, out timeLimit) ? int.Parse(this.tbTimeLimit.Text) : DEFAULT_TIME_LIMIT;
+            return int.TryParse(this.tbTimeLimit.Text, out timeLimit) ? int.Parse(this.tbTimeLimit.Text) 
+                : ProblemAndSolver.DEFAULT_TIME_LIMIT;
         }
 
-        // not necessarily a new problem but resets the state using the specified settings
+        // Calls the reset(int, int, int) function using the current state values
         private void reset()
         {
-            this.toolStrip1.Focus();
+            reset(getSeed(), getProblemSize(), getTimeLimit());
+        }
 
-            int seed = getSeed();
-            int problemSize = getProblemSize();
-            int timeLimit = getTimeLimit();
+        private void reset(int seed, int problemSize, int timeLimit) {
+            this.toolStrip1.Focus();  // Not sure why this is here; leftover from previous code
             HardMode.Modes mode = getMode();
 
-            CityData = new ProblemAndSolver(seed, problemSize, timeLimit);
-            CityData.GenerateProblem(problemSize, mode, timeLimit);
+            CityData = new ProblemAndSolver(seed, problemSize, timeLimit, mode);
+            //CityData.GenerateProblem(problemSize, mode, timeLimit);
 
             tbSeed.Text = seed.ToString();
             tbProblemSize.Text = problemSize.ToString();
@@ -224,30 +239,7 @@ namespace TSP
             tbCostOfTour.Text = " --";
             tbElapsedTime.Text = " --";
             tbNumSolutions.Text = " --";              // re-blanking the text boxes that may have been modified by a solver
-        }
-
-        private bool isValidNumber(String s)
-        {
-            return Regex.IsMatch(this.tbProblemSize.Text, "^[0-9]+$");
-        }
-
-        private void resetToRandomProblem()
-        {
-            if (isValidNumber(this.tbProblemSize.Text))
-            {
-                Random random = new Random();
-                int seed = random.Next(1000); // 3-digit random number
-                this.tbSeed.Text = "" + seed;
-
-                this.reset();
-
-                this.Invalidate();
-            }
-            else
-            {
-                MessageBox.Show("Problem size must be an integer.");
-            };
-
+            this.Invalidate();
         }
     }
 }
