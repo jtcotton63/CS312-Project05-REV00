@@ -30,7 +30,7 @@ namespace TSP
 
             timer.Start();
             initializeState();
-            recur(0);
+            recur(state.startCityIndex);
             timer.Stop();
 
             // From the list of city indexes, create the list for the BSSF
@@ -129,7 +129,7 @@ namespace TSP
 
         // Returns the index of the last city to be visited in the cycle
         private static void recur(int currCityIndex)
-        {
+        {            
             // All cities have been visited; finish and return
             if(state.getCitiesVisited() == state.size - 1)
             {
@@ -146,16 +146,17 @@ namespace TSP
             // find the smallest distance to any other city
             double closestCityDistance = double.PositiveInfinity;
             int closestCityIndex = -1;
-            for (int j = 0; j < state.matrix.GetLength(1); j++)
+            for (int j = 1; j < state.matrix.GetLength(1); j++)
+                // For a different starting city, the following code
+                // would have to be added:
+                //for (int j = 0; j < state.matrix.GetLength(1); j++)
+                //if (j == state.startCityIndex)
+                //    continue;
                 if (state.matrix[currCityIndex, j] < closestCityDistance)
                 {
                     closestCityIndex = j;
                     closestCityDistance = state.matrix[currCityIndex, j];
                 }
-
-            // All the adjacent cities have been visited
-            // if (closestCityDistance == SPACE_PLACEHOLDER)
-            //    return;
 
             // add [i,j]
             state.lowerBound += closestCityDistance;
@@ -169,10 +170,9 @@ namespace TSP
 
             // [j,i]
             state.matrix[closestCityIndex, currCityIndex] = SPACE_PLACEHOLDER;
-            
+
             // reduce
             reduce();
-            
 
             recur(closestCityIndex);
         }
