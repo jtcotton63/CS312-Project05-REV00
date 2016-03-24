@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace TSP
@@ -14,6 +13,7 @@ namespace TSP
        {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Test.run();
             Application.Run(MainForm = new mainform());
         }
         public static mainform MainForm;

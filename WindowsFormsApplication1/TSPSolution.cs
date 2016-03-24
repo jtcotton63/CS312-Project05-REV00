@@ -1,20 +1,26 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 
 namespace TSP
 {
-    public class TSPSolution
+    class TSPSolution
     {
         // we use the representation [cityB,cityA,cityC] 
         // to mean that cityB is the first city in the solution, cityA is the second, cityC is the third 
         // and the edge from cityC to cityB is the final edge in the path.  
         // You are, of course, free to use a different representation if it would be more convenient or efficient 
         // for your data structure(s) and search algorithm. 
-        public ArrayList Route;
+        private List<City> route;
 
         // <param name="iroute">a (hopefully) valid tour</param>
-        public TSPSolution(ArrayList iroute)
+        public TSPSolution(List<City> iroute)
         {
-            Route = new ArrayList(iroute);
+            route = new List<City>(iroute);
+        }
+
+        public List<City> Route
+        {
+            get { return route; }
+            set { route = value; }
         }
 
         // Compute the cost of the current route.  
@@ -27,15 +33,15 @@ namespace TSP
             City here;
             double cost = 0D;
 
-            for (x = 0; x < Route.Count - 1; x++)
+            for (x = 0; x < route.Count - 1; x++)
             {
-                here = Route[x] as City;
-                cost += here.costToGetTo(Route[x + 1] as City);
+                here = route[x] as City;
+                cost += here.costToGetTo(route[x + 1] as City);
             }
 
             // go from the last city to the first. 
-            here = Route[Route.Count - 1] as City;
-            cost += here.costToGetTo(Route[0] as City);
+            here = route[route.Count - 1];
+            cost += here.costToGetTo(route[0]);
             return cost;
         }
     }

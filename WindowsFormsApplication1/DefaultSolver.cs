@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace TSP
@@ -22,7 +22,7 @@ namespace TSP
             City[] cities = cityData.Cities;
             string[] results = new string[3];
             int[] perm = new int[cities.Length];
-            ArrayList route = new ArrayList();
+            List<City> route = new List<City>();
             Random rnd = new Random();
             Stopwatch timer = new Stopwatch();
 

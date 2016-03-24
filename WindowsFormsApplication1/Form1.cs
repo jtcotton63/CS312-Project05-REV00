@@ -229,8 +229,7 @@ namespace TSP
             }
             else if (runType == RunType.GREEDY)
             {
-                solver = new GreedySolver(CityData);
-                results = solver.solve();
+                results = GreedySolver.solve(CityData);
             }
             else if (runType == RunType.FANCY)
             {
@@ -296,7 +295,6 @@ namespace TSP
             HardMode.Modes mode = getMode();
 
             CityData = new Problem(seed, problemSize, timeLimit, mode);
-            //CityData.GenerateProblem(problemSize, mode, timeLimit);
 
             tbSeed.Text = seed.ToString();
             tbProblemSize.Text = problemSize.ToString();
