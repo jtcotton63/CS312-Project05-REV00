@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 namespace TSP
@@ -11,36 +12,25 @@ namespace TSP
         // 0 <= Max elevation <= 1
         public const double MAX_ELEVATION = 0.10;  
 
-        private double _X;
-        private double _Y;
+        public double x;
+        public double y;
         private double _elevation;
         // The mode manager applies to all the cities
         private static HardMode modeManager;
 
         public City(double x, double y)
         {
-            _X = x;
-            _Y = y;
+            this.x = x;
+            this.y = y;
             _elevation = 0.0;
         }
 
+        [JsonConstructorAttribute]
         public City(double x, double y, double elevation)
         {
-            _X = x;
-            _Y = y;
+            this.x = x;
+            this.y = y;
             _elevation = elevation;
-        }
-
-        public double X
-        {
-            get { return _X; }
-            set { _X = value; }
-        }
-
-        public double Y
-        {
-            get { return _Y; }
-            set { _Y = value; }
         }
 
         // How much does it cost to get from this city to the destination?
@@ -49,7 +39,7 @@ namespace TSP
         public double costToGetTo (City destination) 
         {
             // Cartesian distance
-            double magnitude = Math.Sqrt(Math.Pow(this.X - destination.X, 2) + Math.Pow(this.Y - destination.Y, 2));
+            double magnitude = Math.Sqrt(Math.Pow(this.x - destination.x, 2) + Math.Pow(this.y - destination.y, 2));
 
             // For Medium and Hard modes, add in an asymmetric cost (in easy mode it is zero).
             magnitude += (destination._elevation - this._elevation);

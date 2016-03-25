@@ -17,21 +17,36 @@ namespace TSP
         // Populate the state matrix with distances between cities
         public static void initializeState(State state, Problem cityData)
         {
-            for (int i = 0; i < cityData.Size; i++)
+            for (int i = 0; i < cityData.size; i++)
             {
-                City city = cityData.Cities[i];
-                for (int j = 0; j < cityData.Size; j++)
+                City city = cityData.cities[i];
+                for (int j = 0; j < cityData.size; j++)
                 {
                     if (i == j)
                         state.matrix[i, j] = SPACE_PLACEHOLDER;
                     else
-                        state.matrix[i, j] = city.costToGetTo(cityData.Cities[j]);
+                        state.matrix[i, j] = city.costToGetTo(cityData.cities[j]);
                 }
             }
 
             reduce(state);
         }
 
+        // Blank out row and column
+        public static void blankOut(State state, int otherCityIndex)
+        {
+            // row i
+            for (int j = 0; j < state.matrix.GetLength(1); j++)
+                state.matrix[state.currCityIndex, j] = SolverHelper.SPACE_PLACEHOLDER;
+
+            // column j
+            for (int i = 0; i < state.matrix.GetLength(0); i++)
+                state.matrix[i, otherCityIndex] = SolverHelper.SPACE_PLACEHOLDER;
+
+            // [j,i]
+            state.matrix[otherCityIndex, state.currCityIndex] = SolverHelper.SPACE_PLACEHOLDER;
+        }
+        
         // Makes sure that there is a 0 in every row and column
         public static void reduce(State state)
         {

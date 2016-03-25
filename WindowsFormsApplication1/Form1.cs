@@ -24,7 +24,7 @@ namespace TSP
             InitializeComponent();
 
             CityData = new Problem();
-            this.tbSeed.Text = CityData.Seed.ToString();
+            this.tbSeed.Text = CityData.seed.ToString();
         }
 
         /*
@@ -65,34 +65,34 @@ namespace TSP
             Font labelFont = new Font("Arial", 10);
 
             // Draw lines
-            if (CityData.BSSF != null)
+            if (CityData.bssf != null)
             {
                 // make a list of points. 
-                Point[] ps = new Point[CityData.BSSF.Route.Count];
+                Point[] ps = new Point[CityData.bssf.route.Count];
                 int index = 0;
-                foreach (City c in CityData.BSSF.Route)
+                foreach (City c in CityData.bssf.route)
                 {
-                    if (index < CityData.BSSF.Route.Count - 1)
-                        g.DrawString(" " + index + "(" + c.costToGetTo(CityData.BSSF.Route[index + 1] as City) + ")",
+                    if (index < CityData.bssf.route.Count - 1)
+                        g.DrawString(" " + index + "(" + c.costToGetTo(CityData.bssf.route[index + 1] as City) + ")",
                             labelFont,
                             cityBrushStartStyle,
-                            new PointF((float)c.X * width + 3F,
-                            (float)c.Y * height));
+                            new PointF((float)c.x * width + 3F,
+                            (float)c.y * height));
                     else
-                        g.DrawString(" " + index + "(" + c.costToGetTo(CityData.BSSF.Route[0] as City) + ")",
+                        g.DrawString(" " + index + "(" + c.costToGetTo(CityData.bssf.route[0] as City) + ")",
                             labelFont,
                             cityBrushStartStyle,
-                            new PointF((float)c.X * width + 3F,
-                            (float)c.Y * height));
-                    ps[index++] = new Point((int)(c.X * width) + CITY_ICON_SIZE / 2,
-                        (int)(c.Y * height) + CITY_ICON_SIZE / 2);
+                            new PointF((float)c.x * width + 3F,
+                            (float)c.y * height));
+                    ps[index++] = new Point((int)(c.x * width) + CITY_ICON_SIZE / 2,
+                        (int)(c.y * height) + CITY_ICON_SIZE / 2);
                 }
 
                 if (ps.Length > 0)
                 {
                     g.DrawLines(routePenStyle, ps);
-                    g.FillEllipse(cityBrushStartStyle, (float)CityData.Cities[0].X * width - 1,
-                        (float)CityData.Cities[0].Y * height - 1, CITY_ICON_SIZE + 2, CITY_ICON_SIZE + 2);
+                    g.FillEllipse(cityBrushStartStyle, (float)CityData.cities[0].x * width - 1,
+                        (float)CityData.cities[0].y * height - 1, CITY_ICON_SIZE + 2, CITY_ICON_SIZE + 2);
                 }
 
                 // draw the last line. 
@@ -100,9 +100,9 @@ namespace TSP
             }
 
             // Draw city dots
-            foreach (City c in CityData.Cities)
+            foreach (City c in CityData.cities)
             {
-                g.FillEllipse(cityBrushStyle, (float)c.X * width, (float)c.Y * height, CITY_ICON_SIZE, CITY_ICON_SIZE);
+                g.FillEllipse(cityBrushStyle, (float)c.x * width, (float)c.y * height, CITY_ICON_SIZE, CITY_ICON_SIZE);
             }
         }
 
@@ -223,8 +223,8 @@ namespace TSP
             Solver solver;
             if (runType == RunType.BRANCH_AND_BOUND)
             {
-                solver = new BranchAndBoundSolver();
-                CityData = solver.solve(CityData);
+                BranchAndBoundSolver babs = new BranchAndBoundSolver(CityData);
+                CityData = babs.solve();
             }
             else if (runType == RunType.GREEDY)
             {
@@ -241,9 +241,9 @@ namespace TSP
                 CityData = solver.solve(CityData);
             }
 
-            tbCostOfTour.Text = CityData.BSSF.costOfRoute.ToString();
-            tbElapsedTime.Text = CityData.BSSF.timeElasped.ToString();
-            tbNumSolutions.Text = CityData.Solutions.ToString();
+            tbCostOfTour.Text = CityData.bssf.costOfRoute.ToString();
+            tbElapsedTime.Text = CityData.bssf.timeElasped.ToString();
+            tbNumSolutions.Text = CityData.solutions.ToString();
             Invalidate();                          // force a refresh.
         }
 

@@ -12,7 +12,7 @@ namespace TSP
         public Problem solve(Problem cityData)
         {
             int i, swap, temp = 0;
-            City[] cities = cityData.Cities;
+            City[] cities = cityData.cities;
             string[] results = new string[3];
             int[] perm = new int[cities.Length];
             List<City> route = new List<City>();
@@ -38,13 +38,13 @@ namespace TSP
                 {
                     route.Add(cities[perm[i]]);
                 }
-                cityData.BSSF = new TSPSolution(route);
+                cityData.bssf = new TSPSolution(route);
             } while (cityData.costOfBssf() == double.PositiveInfinity);                // until a valid route is found
             timer.Stop();
 
-            cityData.BSSF.costOfRoute = cityData.costOfBssf();
-            cityData.BSSF.timeElasped = timer.Elapsed;
-            cityData.Solutions = 1;
+            cityData.bssf.costOfRoute = cityData.costOfBssf();
+            cityData.bssf.timeElasped = timer.Elapsed;
+            cityData.solutions = 1;
 
             return cityData;
         }

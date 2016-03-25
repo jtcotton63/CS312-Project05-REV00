@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace TSP
@@ -18,35 +17,36 @@ namespace TSP
         public static Problem solve(Problem cityData)
         {
             Stopwatch timer = new Stopwatch();
-            State state = new State(cityData.Size);
+            State state = new State(cityData.size);
 
             timer.Start();
             SolverHelper.initializeState(state, cityData);
-            recur(state, state.startCityIndex);
+            state.currCityIndex = 0;
+            recur(state);
             timer.Stop();
 
             // Since cityData is static, it is pointing to the cityData object
             // that was passed in. Setting it's BSSF here will set the BSSF 
             // of the cityData object in the Form1 class.
-            cityData.BSSF = new TSPSolution(cityData.Cities, state.cityOrder);
-            cityData.BSSF.costOfRoute = state.lowerBound;
-            cityData.BSSF.timeElasped = timer.Elapsed;
-            cityData.Solutions = 1;
+            cityData.bssf = new TSPSolution(cityData.cities, state.cityOrder, state.lowerBound);
+            cityData.bssf.timeElasped = timer.Elapsed;
+            cityData.solutions = 1;
 
             return cityData;
         }
 
         // Returns the index of the last city to be visited in the cycle
-        public static void recur(State state, int currCityIndex)
-        {            
+        private static void recur(State state)
+        {
+            int currCityIndex = state.currCityIndex;
             // All cities have been visited; finish and return
             if(state.getCitiesVisited() == state.size - 1)
             {
-                if (state.matrix[currCityIndex, state.startCityIndex] == double.PositiveInfinity)
+                if (state.matrix[currCityIndex, state.cityOfOriginIndex] == double.PositiveInfinity)
                     throw new SystemException("This should never happen");
 
                 state.addCity(currCityIndex);
-                state.lowerBound += state.matrix[currCityIndex, state.startCityIndex];
+                state.lowerBound += state.matrix[currCityIndex, state.cityOfOriginIndex];
                 return;
             }
 
@@ -69,21 +69,15 @@ namespace TSP
 
             // add [i,j]
             state.lowerBound += closestCityDistance;
-            // row i
-            for (int j = 0; j < state.matrix.GetLength(1); j++)
-                state.matrix[currCityIndex, j] = SolverHelper.SPACE_PLACEHOLDER;
 
-            // column j
-            for (int i = 0; i < state.matrix.GetLength(0); i++)
-                state.matrix[i, closestCityIndex] = SolverHelper.SPACE_PLACEHOLDER;
-
-            // [j,i]
-            state.matrix[closestCityIndex, currCityIndex] = SolverHelper.SPACE_PLACEHOLDER;
+            // Blank out appropriate spaces
+            SolverHelper.blankOut(state, closestCityIndex);
 
             // reduce
             SolverHelper.reduce(state);
 
-            recur(state, closestCityIndex);
+            state.currCityIndex = closestCityIndex;
+            recur(state);
         }
     }
 }

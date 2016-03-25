@@ -14,24 +14,22 @@ namespace TSP
         public TimeSpan timeElasped;
         public double costOfRoute;
 
-        public TSPSolution(City[] cities, List<int> cityOrder)
+        public TSPSolution(City[] cities, List<int> cityOrder, double costOfRoute)
         {
             // From the list of city indexes, create the list of cities
             route = new List<City>(cityOrder.Count);
             foreach (int i in cityOrder)
-                route.Add(cities[i]);
+            {
+                City temp = SolverHelper.clone(cities[i]);
+                route.Add(temp);
+            }
+            this.costOfRoute = costOfRoute;
         }
         
         // <param name="iroute">a (hopefully) valid tour</param>
         public TSPSolution(List<City> iroute)
         {
             route = new List<City>(iroute);
-        }
-
-        public List<City> Route
-        {
-            get { return route; }
-            set { route = value; }
         }
     }
 }

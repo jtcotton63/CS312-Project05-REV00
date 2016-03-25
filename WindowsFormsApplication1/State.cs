@@ -6,7 +6,8 @@ namespace TSP
     class State
     {
         public int size;
-        public int startCityIndex;
+        public int cityOfOriginIndex;
+        public int currCityIndex;
         public double[,] matrix;
         public double lowerBound;
         public List<int> cityOrder;
@@ -15,7 +16,8 @@ namespace TSP
         public State(int size)
         {
             this.size = size;
-            this.startCityIndex = 0;
+            this.cityOfOriginIndex = 0;
+            this.currCityIndex = 0;
             this.matrix = new double[size, size];
             this.lowerBound = 0;
             this.cityOrder = new List<int>(size+1);
@@ -33,7 +35,6 @@ namespace TSP
 
         public void printState()
         {
-            Console.Write("\n\n");
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
