@@ -6,19 +6,12 @@ namespace TSP
 {
     class DefaultSolver : Solver
     {
-        Problem cityData;
-
-        public DefaultSolver(Problem cityData)
-        {
-            this.cityData = cityData;
-        }
-
         // This is the entry point for the default solver
         // which just finds a valid random tour 
         // <returns>The random valid tour</returns>
-        public string[] solve()
+        public Problem solve(Problem cityData)
         {
-            int i, swap, temp, count = 0;
+            int i, swap, temp = 0;
             City[] cities = cityData.Cities;
             string[] results = new string[3];
             int[] perm = new int[cities.Length];
@@ -46,15 +39,14 @@ namespace TSP
                     route.Add(cities[perm[i]]);
                 }
                 cityData.BSSF = new TSPSolution(route);
-                count++;
             } while (cityData.costOfBssf() == double.PositiveInfinity);                // until a valid route is found
             timer.Stop();
 
-            results[Problem.COST_POSITION] = cityData.costOfBssf().ToString();                          // load results array
-            results[Problem.TIME_POSITION] = timer.Elapsed.ToString();
-            results[Problem.COUNT_POSITION] = count.ToString();
+            cityData.BSSF.costOfRoute = cityData.costOfBssf();
+            cityData.BSSF.timeElasped = timer.Elapsed;
+            cityData.Solutions = 1;
 
-            return results;
+            return cityData;
         }
     }
 }

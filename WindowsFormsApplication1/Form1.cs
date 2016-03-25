@@ -214,7 +214,6 @@ namespace TSP
 
         private void handleToolStripMenuClick(RunType runType)
         {
-            string[] results;
             this.reset();
 
             tbElapsedTime.Text = " Running...";
@@ -224,27 +223,27 @@ namespace TSP
             Solver solver;
             if (runType == RunType.BRANCH_AND_BOUND)
             {
-                solver = new BranchAndBoundSolver(CityData);
-                results = solver.solve();
+                solver = new BranchAndBoundSolver();
+                CityData = solver.solve(CityData);
             }
             else if (runType == RunType.GREEDY)
             {
-                results = GreedySolver.solve(CityData);
+                CityData = GreedySolver.solve(CityData);
             }
             else if (runType == RunType.FANCY)
             {
-                solver = new FancySolver(CityData);
-                results = solver.solve();
+                solver = new FancySolver();
+                CityData = solver.solve(CityData);
             }
             else  // runType == RunType.DEFAULT
             {
-                solver = new DefaultSolver(CityData);
-                results = solver.solve();
+                solver = new DefaultSolver();
+                CityData = solver.solve(CityData);
             }
 
-            tbCostOfTour.Text = results[Problem.COST_POSITION];
-            tbElapsedTime.Text = results[Problem.TIME_POSITION];
-            tbNumSolutions.Text = results[Problem.COUNT_POSITION];
+            tbCostOfTour.Text = CityData.BSSF.costOfRoute.ToString();
+            tbElapsedTime.Text = CityData.BSSF.timeElasped.ToString();
+            tbNumSolutions.Text = CityData.Solutions.ToString();
             Invalidate();                          // force a refresh.
         }
 

@@ -3,6 +3,6 @@ namespace TSP
 {
     interface Solver
     {
-        string[] solve();
+        Problem solve(Problem cityData);
     }
 }

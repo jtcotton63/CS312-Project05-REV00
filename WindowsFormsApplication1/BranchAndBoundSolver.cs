@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TSP
+﻿namespace TSP
 {
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Project 5
@@ -11,20 +9,26 @@ namespace TSP
      */
     class BranchAndBoundSolver : Solver
     {
-        Problem cityData;
-
-        public BranchAndBoundSolver(Problem cityData)
+        // finds the best tour possible using the branch and bound method of attack
+        // For an example of what to return, see DefaultSolver.solve() method.
+        public Problem solve(Problem cityData)
         {
-            this.cityData = cityData;
+            State originalState = new State(cityData.Size);
+            SolverHelper.initializeState(originalState, cityData);
+            //q.Add(originalState);
+            State determineBSSFState = SolverHelper.clone(originalState);
+            cityData.BSSF = determineBSSF(determineBSSFState);
+
+
+            //while (!q.empty())
+            //  recur(q.pop());
+            return null;
         }
 
-        // finds the best tour possible using the branch and bound method of attack
-        // <returns>results array for GUI that contains three ints: cost of solution, time spent to find solution,
-        // number of solutions found during search (not counting initial BSSF estimate)</returns>
-        // For an example of what to return, see DefaultSolver.solve() method.
-        public string[] solve()
+        private TSPSolution determineBSSF(State state)
         {
-            throw new NotImplementedException();
+            GreedySolver.recur(state, 0);
+            return null;
         }
     }
 }

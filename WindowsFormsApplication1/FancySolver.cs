@@ -11,18 +11,11 @@ namespace TSP
      */
     class FancySolver : Solver
     {
-        Problem cityData;
-
-        public FancySolver(Problem cityData)
-        {
-            this.cityData = cityData;
-        }
-
         // finds the best tour possible using your own fancy TSP solving method
         // <returns>results array for GUI that contains three ints: cost of solution, time spent to find solution,
         // number of solutions found during search (not counting initial BSSF estimate)</returns>
         // For an example of what to return, see DefaultSolver.solve() method.
-        public string[] solve()
+        public Problem solve(Problem cityData)
         {
             throw new NotImplementedException();
         }

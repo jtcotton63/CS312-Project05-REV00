@@ -13,122 +13,31 @@ namespace TSP
      */
     static class GreedySolver
     {
-        private const double SPACE_PLACEHOLDER = double.PositiveInfinity;
-
-        private static Problem cityData;
-        private static State state;
-
         // finds the greedy tour starting from each city and keeps the best (valid) one
-        // <returns>results array for GUI that contains three ints: cost of solution, time spent to find solution,
-        // number of solutions found during search (not counting initial BSSF estimate)</returns>
         // For an example of what to return, see DefaultSolver.solve() method.
-        public static string[] solve(Problem cityData2)
+        public static Problem solve(Problem cityData)
         {
             Stopwatch timer = new Stopwatch();
-            cityData = cityData2;
-            state = new State(cityData.Size);
+            State state = new State(cityData.Size);
 
             timer.Start();
-            initializeState();
-            recur(state.startCityIndex);
+            SolverHelper.initializeState(state, cityData);
+            recur(state, state.startCityIndex);
             timer.Stop();
 
-            // From the list of city indexes, create the list for the BSSF
-            List<City> citiesVisitedInOrder = new List<City>(state.cityOrder.Count);
-            foreach(int i in state.cityOrder)
-                citiesVisitedInOrder.Add(cityData.Cities[i]);
             // Since cityData is static, it is pointing to the cityData object
             // that was passed in. Setting it's BSSF here will set the BSSF 
             // of the cityData object in the Form1 class.
-            cityData.BSSF = new TSPSolution(citiesVisitedInOrder);
+            cityData.BSSF = new TSPSolution(cityData.Cities, state.cityOrder);
+            cityData.BSSF.costOfRoute = state.lowerBound;
+            cityData.BSSF.timeElasped = timer.Elapsed;
+            cityData.Solutions = 1;
 
-            string[] rtn = new string[3];
-            rtn[Problem.COST_POSITION] = state.lowerBound.ToString();
-            rtn[Problem.TIME_POSITION] = timer.Elapsed.ToString();
-            rtn[Problem.COUNT_POSITION] = "1";
-
-            // Null out some variables before exiting
-            state = null;
-            cityData = null;
-            return rtn;
-        }
-
-        private static void initializeState()
-        {
-
-            // Populate the state matrix with distances between cities
-            for(int i = 0; i < cityData.Size; i++)
-            {
-                City city = cityData.Cities[i];
-                for(int j = 0; j < cityData.Size; j++)
-                {
-                    if (i == j)
-                        state.matrix[i, j] = SPACE_PLACEHOLDER;
-                    else
-                        state.matrix[i, j] = city.costToGetTo(cityData.Cities[j]);
-                }
-            }
-
-            reduce();
-        }
-
-        private static void reduce()
-        {
-            // Reduce the rows
-            for (int i = 0; i < state.matrix.GetLength(0); i++)
-            {
-                // Find the smallest value in the row
-                double minInRow = double.PositiveInfinity;
-                for (int j = 0; j < state.matrix.GetLength(1); j++)
-                    minInRow = Math.Min(minInRow, state.matrix[i,j]);
-
-                // If the smallest value in the row is 0,
-                // then there already is a 0 in the row
-                // We don't need to add a 0 into the row
-                //
-                // If the smallest value in the row is infinity,
-                // then we have a row of infinities
-                // Nothing happens
-                if (minInRow != 0 && minInRow != SPACE_PLACEHOLDER)
-                {
-                    // Add the smallest value in the row to the lower bound
-                    state.lowerBound += minInRow;
-
-                    // Subtract that value from all the values in the row
-                    // The [i,j] that contained the smallest value will be
-                    // set to 0, bc minInRow - minInRow = 0;
-                    // If the value at [i,j] is the placeholder, nothing happens
-                    for (int j = 0; j < state.matrix.GetLength(1); j++)
-                        if(state.matrix[i,j] != SPACE_PLACEHOLDER)
-                            state.matrix[i, j] -= minInRow;
-                }
-
-            }
-
-            // Reduce the columns
-            for(int j = 0; j < state.matrix.GetLength(1); j++)
-            {
-                // Find the smallest value in the column
-                double minInColumn = double.PositiveInfinity;
-                for (int i = 0; i < state.matrix.GetLength(0); i++)
-                    minInColumn = Math.Min(minInColumn, state.matrix[i, j]);
-
-                // Same as above, except switching rows for columns
-                if(minInColumn != 0 && minInColumn != SPACE_PLACEHOLDER)
-                {
-                    // Add the smallest value in the column to the lower bound
-                    state.lowerBound += minInColumn;
-
-                    // Subtract that value from all the values in the column
-                    for (int i = 0; i < state.matrix.GetLength(0); i++)
-                        if(state.matrix[i,j] != SPACE_PLACEHOLDER)
-                            state.matrix[i, j] -= minInColumn;
-                }
-            }
+            return cityData;
         }
 
         // Returns the index of the last city to be visited in the cycle
-        private static void recur(int currCityIndex)
+        public static void recur(State state, int currCityIndex)
         {            
             // All cities have been visited; finish and return
             if(state.getCitiesVisited() == state.size - 1)
@@ -162,19 +71,19 @@ namespace TSP
             state.lowerBound += closestCityDistance;
             // row i
             for (int j = 0; j < state.matrix.GetLength(1); j++)
-                state.matrix[currCityIndex, j] = SPACE_PLACEHOLDER;
+                state.matrix[currCityIndex, j] = SolverHelper.SPACE_PLACEHOLDER;
 
             // column j
             for (int i = 0; i < state.matrix.GetLength(0); i++)
-                state.matrix[i, closestCityIndex] = SPACE_PLACEHOLDER;
+                state.matrix[i, closestCityIndex] = SolverHelper.SPACE_PLACEHOLDER;
 
             // [j,i]
-            state.matrix[closestCityIndex, currCityIndex] = SPACE_PLACEHOLDER;
+            state.matrix[closestCityIndex, currCityIndex] = SolverHelper.SPACE_PLACEHOLDER;
 
             // reduce
-            reduce();
+            SolverHelper.reduce(state);
 
-            recur(closestCityIndex);
+            recur(state, closestCityIndex);
         }
     }
 }

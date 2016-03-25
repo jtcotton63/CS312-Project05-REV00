@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace TSP
 {
@@ -19,14 +20,8 @@ namespace TSP
         private Random _rnd;
 
         private City[] _cities;
-        private ArrayList _route;
         private TSPSolution _bssf;
-
-        // These three constants are used for convenience/clarity in populating and 
-        // accessing the results array that is passed back to the calling form
-        public const int COST_POSITION = 0;           
-        public const int TIME_POSITION = 1;
-        public const int COUNT_POSITION = 2;
+        private int numSolutions;
 
         // Constructors
         public Problem()
@@ -49,7 +44,7 @@ namespace TSP
             this.resetData();
         }
 
-        // Getters
+        // Getters and setters
         public TSPSolution BSSF
         {
             get { return _bssf; }
@@ -59,12 +54,6 @@ namespace TSP
         public City[] Cities
         {
             get { return _cities; }
-        }
-
-        public ArrayList Route
-        {
-            get { return _route; }
-            set { _route = value; }
         }
 
         public int Seed
@@ -77,11 +66,16 @@ namespace TSP
             get { return _size; }
         }
 
+        public int Solutions
+        {
+            get { return numSolutions; }
+            set { numSolutions = value; }
+        }
+
         // Reset the problem instance
         private void resetData()
         {
             _cities = new City[_size];
-            _route = new ArrayList(_size);
             _bssf = null;
 
             if (_mode == HardMode.Modes.Easy)
@@ -105,10 +99,27 @@ namespace TSP
         }
 
         //  Return the cost of the best solution so far. 
-        public double costOfBssf ()
+        public double costOfBssf()
         {
             if (_bssf != null)
-                return (_bssf.costOfRoute());
+            {
+                // go through each edge in the route and add up the cost. 
+                int x;
+                List<City> route = _bssf.route;
+                City here;
+                double cost = 0D;
+
+                for (x = 0; x < route.Count - 1; x++)
+                {
+                    here = route[x];
+                    cost += here.costToGetTo(route[x + 1]);
+                }
+
+                // go from the last city to the first. 
+                here = route[route.Count - 1];
+                cost += here.costToGetTo(route[0]);
+                return cost;
+            }
             else
                 return -1D; 
         }
