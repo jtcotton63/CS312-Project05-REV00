@@ -11,7 +11,6 @@ namespace TSP
         // You are, of course, free to use a different representation if it would be more convenient or efficient 
         // for your data structure(s) and search algorithm. 
         public List<City> route;
-        public TimeSpan timeElasped;
         public double costOfRoute;
 
         public TSPSolution(City[] cities, List<int> cityOrder, double costOfRoute)

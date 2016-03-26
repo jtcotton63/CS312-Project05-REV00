@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TSP
 {
@@ -25,9 +26,12 @@ namespace TSP
         // For an example of what to return, see DefaultSolver.solve() method.
         public Problem solve()
         {
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+
             State beginningState = new State(cityData.size);
             SolverHelper.initializeState(beginningState, cityData);
-            q.Enqueue(beginningState);
+            this.q.Enqueue(beginningState);
             Problem determineBSSFProblem = SolverHelper.clone(cityData);
             this.cityData.bssf = GreedySolver.solve(determineBSSFProblem).bssf;
 
@@ -38,19 +42,24 @@ namespace TSP
                 //that of the current
             }
 
+            timer.Stop();
+            cityData.timeElasped = timer.Elapsed;
+
             return cityData;
         }
 
         private void recur(State state)
         {
-            state.addCity(state.currCityIndex);
-
             // This is a leaf
             // All cities have been visited; finish and return
-            if (state.getCitiesVisited() == state.size - 1)
+            if (state.getCitiesVisited() == cityData.size - 1)
             {
-                if (state.matrix[state.currCityIndex, state.cityOfOriginIndex] == double.PositiveInfinity)
-                    throw new SystemException("This should never happen");
+                // The path to the last city is blocked
+                if (state.matrix[state.currCityIndex, state.cityOfOriginIndex]
+                    == SolverHelper.SPACE_PLACEHOLDER)
+                    return;
+
+                state.addCity(state.currCityIndex);
 
                 // Since we've hit a leaf node, we've found another possible solution
                 cityData.solutions++;
@@ -66,10 +75,12 @@ namespace TSP
                 return;
             }
 
+            state.addCity(state.currCityIndex);
+
             for (int j = 1; j < state.matrix.GetLength(1); j++)
             {
-                Console.WriteLine(state.currCityIndex + " " + j);
-                state.printState();
+                //Console.WriteLine(state.currCityIndex + " " + j);
+                //state.printState();
 
                 double currDistVal = state.matrix[state.currCityIndex, j];
                 if (currDistVal != SolverHelper.SPACE_PLACEHOLDER &&
@@ -82,7 +93,7 @@ namespace TSP
 
                     // Blank out the appropriate values with the placeholder
                     SolverHelper.blankOut(childState, j);
-                    childState.printState();
+                    //childState.printState();
 
                     // reduce
                     SolverHelper.reduce(childState);

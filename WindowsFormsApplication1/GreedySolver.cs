@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace TSP
 {
@@ -17,19 +16,20 @@ namespace TSP
         public static Problem solve(Problem cityData)
         {
             Stopwatch timer = new Stopwatch();
-            State state = new State(cityData.size);
-
             timer.Start();
+
+            State state = new State(cityData.size);
             SolverHelper.initializeState(state, cityData);
             state.currCityIndex = 0;
             recur(state);
+
             timer.Stop();
 
             // Since cityData is static, it is pointing to the cityData object
             // that was passed in. Setting it's BSSF here will set the BSSF 
             // of the cityData object in the Form1 class.
             cityData.bssf = new TSPSolution(cityData.cities, state.cityOrder, state.lowerBound);
-            cityData.bssf.timeElasped = timer.Elapsed;
+            cityData.timeElasped = timer.Elapsed;
             cityData.solutions = 1;
 
             return cityData;
@@ -38,16 +38,22 @@ namespace TSP
         // Returns the index of the last city to be visited in the cycle
         private static void recur(State state)
         {
+            //state.printState();
             int currCityIndex = state.currCityIndex;
             // All cities have been visited; finish and return
             if(state.getCitiesVisited() == state.size - 1)
             {
+                // The current path cannot be completed bc there is no path from the last city to the first
                 if (state.matrix[currCityIndex, state.cityOfOriginIndex] == double.PositiveInfinity)
-                    throw new SystemException("This should never happen");
-
-                state.addCity(currCityIndex);
-                state.lowerBound += state.matrix[currCityIndex, state.cityOfOriginIndex];
-                return;
+                {
+                    state.lowerBound = double.PositiveInfinity;   
+                }
+                else
+                {
+                    state.addCity(currCityIndex);
+                    state.lowerBound += state.matrix[currCityIndex, state.cityOfOriginIndex];
+                    return;
+                }
             }
 
             state.addCity(currCityIndex);

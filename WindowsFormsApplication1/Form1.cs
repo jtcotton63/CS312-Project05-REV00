@@ -242,7 +242,7 @@ namespace TSP
             }
 
             tbCostOfTour.Text = CityData.bssf.costOfRoute.ToString();
-            tbElapsedTime.Text = CityData.bssf.timeElasped.ToString();
+            tbElapsedTime.Text = CityData.timeElasped.ToString();
             tbNumSolutions.Text = CityData.solutions.ToString();
             Invalidate();                          // force a refresh.
         }

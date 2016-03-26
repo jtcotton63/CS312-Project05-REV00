@@ -20,6 +20,7 @@ namespace TSP
 
         public City[] cities;
         public TSPSolution bssf;
+        public TimeSpan timeElasped;
         public int solutions;
 
         // Constructors
@@ -37,6 +38,13 @@ namespace TSP
         {
             this.seed = seed;
             this.rnd = new Random(seed);
+
+            // CRITICAL - TO MAKE THE POINTS LOOK LIKE THE
+            // POINTS IN THE OLD VERSION FOR THE SAME SEEDS
+            // DO NOT REMOVE THIS FOR LOOP
+            for (int i = 0; i < 50; i++)
+                rnd.NextDouble();
+
             this.size = problemSize;
             this.mode = mode;
             this.timeLimit = timeInSeconds * 1000;                        // timer wants timeLimit in milliseconds

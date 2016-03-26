@@ -43,7 +43,7 @@ namespace TSP
             timer.Stop();
 
             cityData.bssf.costOfRoute = cityData.costOfBssf();
-            cityData.bssf.timeElasped = timer.Elapsed;
+            cityData.timeElasped = timer.Elapsed;
             cityData.solutions = 1;
 
             return cityData;
